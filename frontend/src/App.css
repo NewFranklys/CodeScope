@@ -119,3 +119,27 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 }
+
+.largest-files {
+  margin-top: 40px;
+}
+
+.file-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 14px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.file-row div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.file-row div > span {
+  color: #777;
+  font-size: 12px;
+}

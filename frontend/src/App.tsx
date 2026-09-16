@@ -1,11 +1,18 @@
 import { useState, type FormEvent } from "react";
 import "./App.css";
 
+type FileAnalysis = {
+  path: string;
+  lines: number;
+  language: string;
+};
+
 type RepositoryAnalysis = {
   name: string;
   files: number;
   lines: number;
   languages: Record<string, number>;
+  largest_files: FileAnalysis[];
 };
 
 function App() {
@@ -130,6 +137,21 @@ function App() {
                 </div>
               )
             )}
+          </div>
+
+          <div className="largest-files">
+            <h3>Largest files</h3>
+
+            {analysis.largest_files.map((file) => (
+              <div className="file-row" key={file.path}>
+                <div>
+                  <strong>{file.path}</strong>
+                  <span>{file.language}</span>
+                </div>
+
+                <strong>{file.lines} lines</strong>
+              </div>
+            ))}
           </div>
         </section>
       )}

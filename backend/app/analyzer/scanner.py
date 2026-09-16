@@ -5,7 +5,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from app.analyzer.ignores import DEFAULT_IGNORED_DIRECTORIES
-from app.analyzer.models import RepositoryAnalysis
+from app.analyzer.models import FileAnalysis, RepositoryAnalysis
 
 
 LANGUAGES_BY_EXTENSION = {
@@ -75,6 +75,7 @@ def scan_repository(repository_path: str) -> RepositoryAnalysis:
     total_files = 0
     total_lines = 0
     languages: Counter[str] = Counter()
+    analyzed_files: list[FileAnalysis] = []
 
     for root, directories, files in os.walk(path):
         directories[:] = [
@@ -95,15 +96,34 @@ def scan_repository(repository_path: str) -> RepositoryAnalysis:
             if language is None:
                 continue
 
+            line_count = count_lines(file_path)
+
             languages[language] += 1
-            total_lines += count_lines(file_path)
+            total_lines += line_count
+
+            relative_path = file_path.relative_to(path)
+
+            analyzed_files.append(
+                FileAnalysis(
+                    path=relative_path.as_posix(),
+                    lines=line_count,
+                    language=language,
+                )
+            )
+
+    largest_files = sorted(
+        analyzed_files,
+        key=lambda file: file.lines,
+        reverse=True,
+    )[:10]
 
     return RepositoryAnalysis(
-        name=path.name,
-        files=total_files,
-        lines=total_lines,
-        languages=dict(languages.most_common()),
-    )
+    name=path.name,
+    files=total_files,
+    lines=total_lines,
+    languages=dict(languages.most_common()),
+    largest_files=largest_files,
+)
 
 
 if __name__ == "__main__":
