@@ -5,12 +5,23 @@ from pydantic import BaseModel
 
 from app.analyzer.scanner import scan_repository
 
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title="CodeScope",
     version="0.1.0",
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class AnalyzeRequest(BaseModel):
     path: str
