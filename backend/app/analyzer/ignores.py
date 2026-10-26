@@ -10,6 +10,12 @@ DEFAULT_IGNORED_DIRECTORIES = {
     "dist",
     "build",
     ".next",
+    ".nuxt",
+    ".svelte-kit",
+    "coverage",
+    ".coverage",
     ".idea",
     ".vscode",
+    "vendor",
+    "target",
 }
